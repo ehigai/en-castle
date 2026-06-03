@@ -1,0 +1,14 @@
+{
+  "name": "chess-engine",
+  "module": "index.ts",
+  "type": "module",
+  "scripts": {
+    "compile":"bun build --compile --outfile=compiled ./index.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}
