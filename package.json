@@ -3,7 +3,8 @@
   "module": "index.ts",
   "type": "module",
   "scripts": {
-    "compile":"bun build --compile --outfile=compiled ./index.ts"
+    "compile": "bun build --compile --outfile=compiled ./index.ts",
+    "test": "bun test"
   },
   "devDependencies": {
     "@types/bun": "latest"
