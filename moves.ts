@@ -8,7 +8,19 @@ import {
   RANK_5,
 } from "./constants";
 
-function getNorthAttacks(pieces: bigint, empty: bigint): bigint {
+export function getWhitePawnAttacks(whitePawns: bigint): bigint {
+  const attacksLeft = ((whitePawns & NOT_A_FILE) << 7n) & CLAMP_64;
+  const attacksRight = ((whitePawns & NOT_H_FILE) << 9n) & CLAMP_64;
+  return attacksLeft | attacksRight;
+}
+
+export function getBlackPawnAttacks(blackPawns: bigint): bigint {
+  const attacksLeft = (blackPawns & NOT_A_FILE) >> 9n;
+  const attacksRight = (blackPawns & NOT_H_FILE) >> 7n;
+  return attacksLeft | attacksRight;
+}
+
+export function getNorthAttacks(pieces: bigint, empty: bigint): bigint {
   let flood = pieces;
   let prop = empty;
 
@@ -22,7 +34,7 @@ function getNorthAttacks(pieces: bigint, empty: bigint): bigint {
   return (flood << 8n) & CLAMP_64;
 }
 
-function getSouthAttacks(pieces: bigint, empty: bigint): bigint {
+export function getSouthAttacks(pieces: bigint, empty: bigint): bigint {
   let flood = pieces;
   let prop = empty;
 
@@ -37,7 +49,7 @@ function getSouthAttacks(pieces: bigint, empty: bigint): bigint {
   return flood >> 8n;
 }
 
-function getEastAttacks(pieces: bigint, empty: bigint): bigint {
+export function getEastAttacks(pieces: bigint, empty: bigint): bigint {
   let flood = pieces;
   let prop = empty & NOT_A_FILE;
 
@@ -52,7 +64,7 @@ function getEastAttacks(pieces: bigint, empty: bigint): bigint {
   return (flood << 1n) & NOT_A_FILE & CLAMP_64;
 }
 
-function getWestAttacks(pieces: bigint, empty: bigint): bigint {
+export function getWestAttacks(pieces: bigint, empty: bigint): bigint {
   let flood = pieces;
   let prop = empty & NOT_H_FILE;
 
@@ -67,7 +79,7 @@ function getWestAttacks(pieces: bigint, empty: bigint): bigint {
   return (flood >> 1n) & NOT_H_FILE;
 }
 
-function getNorthEastAttacks(pieces: bigint, empty: bigint): bigint {
+export function getNorthEastAttacks(pieces: bigint, empty: bigint): bigint {
   let flood = pieces;
   let prop = empty & NOT_A_FILE;
 
@@ -82,7 +94,7 @@ function getNorthEastAttacks(pieces: bigint, empty: bigint): bigint {
   return (flood << 9n) & NOT_A_FILE & CLAMP_64;
 }
 
-function getNorthWestAttacks(pieces: bigint, empty: bigint): bigint {
+export function getNorthWestAttacks(pieces: bigint, empty: bigint): bigint {
   let flood = pieces;
   let prop = empty & NOT_H_FILE;
 
@@ -97,7 +109,7 @@ function getNorthWestAttacks(pieces: bigint, empty: bigint): bigint {
   return (flood << 7n) & NOT_H_FILE & CLAMP_64;
 }
 
-function getSouthEastAttacks(pieces: bigint, empty: bigint): bigint {
+export function getSouthEastAttacks(pieces: bigint, empty: bigint): bigint {
   let flood = pieces;
   let prop = empty & NOT_A_FILE;
 
@@ -112,7 +124,7 @@ function getSouthEastAttacks(pieces: bigint, empty: bigint): bigint {
   return (flood >> 7n) & NOT_A_FILE;
 }
 
-function getSouthWestAttacks(pieces: bigint, empty: bigint): bigint {
+export function getSouthWestAttacks(pieces: bigint, empty: bigint): bigint {
   let flood = pieces;
   let prop = empty & NOT_H_FILE;
 
@@ -152,6 +164,7 @@ export function getWhitePawnMoves(
   whitePawns: bigint,
   emptySquares: bigint,
   blackPieces: bigint,
+  epSquare: bigint,
 ): bigint {
   const singlePushes = (whitePawns << 8n) & CLAMP_64 & emptySquares;
   const doublePushes = (singlePushes << 8n) & CLAMP_64 & emptySquares & RANK_4;
@@ -161,13 +174,17 @@ export function getWhitePawnMoves(
   const capturesRight =
     ((whitePawns & NOT_H_FILE) << 9n) & CLAMP_64 & blackPieces;
 
-  return singlePushes | doublePushes | capturesLeft | capturesRight;
+  const epLeft = ((whitePawns & NOT_A_FILE) << 7n) & CLAMP_64 & epSquare;
+  const epRight = ((whitePawns & NOT_H_FILE) << 9n) & CLAMP_64 & epSquare;
+  // prettier-ignore
+  return singlePushes | doublePushes | capturesLeft | capturesRight | epLeft | epRight;
 }
 
 export function getBlackPawnMoves(
   blackPawns: bigint,
   emptySquares: bigint,
   whitePieces: bigint,
+  epSquare: bigint,
 ): bigint {
   const singlePushes = (blackPawns >> 8n) & emptySquares;
   const doublePushes = (singlePushes >> 8n) & emptySquares & RANK_5;
@@ -175,7 +192,10 @@ export function getBlackPawnMoves(
   const capturesLeft = ((blackPawns & NOT_A_FILE) >> 9n) & whitePieces;
   const capturesRight = ((blackPawns & NOT_H_FILE) >> 7n) & whitePieces;
 
-  return singlePushes | doublePushes | capturesLeft | capturesRight;
+  const epLeft = ((blackPawns & NOT_A_FILE) >> 9n) & epSquare;
+  const epRight = ((blackPawns & NOT_H_FILE) >> 7n) & epSquare;
+  // prettier-ignore
+  return singlePushes | doublePushes | capturesLeft | capturesRight | epLeft | epRight;
 }
 
 export function getRookMoves(
