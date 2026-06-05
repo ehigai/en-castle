@@ -1,5 +1,11 @@
 import { validateFen } from "./fen";
-import { fenToBitboards } from "./generator";
+import { fenToBitboards, generateLegalMoves } from "./generator";
+import {
+  getBlackCastlingMoves,
+  getBlackDangerZone,
+  getWhiteCastlingMoves,
+  getWhiteDangerZone,
+} from "./legal";
 import {
   getBlackPawnMoves,
   getKnightMoves,
@@ -9,6 +15,7 @@ import {
   getQueenMoves,
   getKingMoves,
 } from "./moves";
+import { getEnPassantSquare } from "./utils";
 
 let currentFen = "";
 const fenPrompt = "Enter FEN (or Ctrl+C to exit):\n> ";
@@ -61,13 +68,25 @@ for await (const line of console) {
 
       console.log(`Bitboards:`, bitboards);
 
+      const epSquare: bigint = getEnPassantSquare(currentFen);
+
       console.log(
         `White Pawns moves:`,
-        getWhitePawnMoves(bitboards.P, emptySquares, blackPieces).toString(16),
+        getWhitePawnMoves(
+          bitboards.P,
+          emptySquares,
+          blackPieces,
+          epSquare,
+        ).toString(16),
       );
       console.log(
         `Black Pawns moves:`,
-        getBlackPawnMoves(bitboards.p, emptySquares, whitePieces).toString(16),
+        getBlackPawnMoves(
+          bitboards.p,
+          emptySquares,
+          whitePieces,
+          epSquare,
+        ).toString(16),
       );
       console.log(
         `White Knight moves:`,
@@ -118,6 +137,43 @@ for await (const line of console) {
         `Black King moves:`,
         getKingMoves(bitboards.k, blackPieces).toString(16),
       );
+
+      const occupied = whitePieces | blackPieces;
+
+      // Generate the Danger Zones
+      const whiteDangerZone = getWhiteDangerZone(bitboards, occupied);
+      const blackDangerZone = getBlackDangerZone(bitboards, occupied);
+
+      console.log(`\n--- Danger Zones ---`);
+      console.log(`White Danger Zone:`, whiteDangerZone.toString(16));
+      console.log(`Black Danger Zone:`, blackDangerZone.toString(16));
+
+      // Extract castling rights from the FEN string
+      const fenParts = currentFen.split(" ");
+      const castlingRights = fenParts.length > 2 ? fenParts[2] : "-";
+
+      console.log(`\n--- Castling Moves ---`);
+      console.log(
+        `White Castling:`,
+        getWhiteCastlingMoves(
+          castlingRights as string,
+          occupied,
+          blackDangerZone,
+        ).toString(16),
+      );
+      console.log(
+        `Black Castling:`,
+        getBlackCastlingMoves(
+          castlingRights as string,
+          occupied,
+          whiteDangerZone,
+        ).toString(16),
+      );
+      const legalMoves = generateLegalMoves(currentFen);
+      console.log(
+        `\n--- Strictly Legal Move List (${legalMoves.length} total) ---`,
+      );
+      console.log(legalMoves.join(", "));
     }
 
     currentFen = "";

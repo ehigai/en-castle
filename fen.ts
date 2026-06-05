@@ -186,3 +186,4 @@ export function validateFen(fen: string): { isValid: boolean; error?: string } {
 
   return { isValid: true };
 }
+// TODO: Add more FEN validation rules (e.g. check for impossible positions, validate castling rights against piece placement, validate valid turn sequences(white makes first move), etc.)
