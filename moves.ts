@@ -10,71 +10,120 @@ import {
 
 function getNorthAttacks(pieces: bigint, empty: bigint): bigint {
   let flood = pieces;
-  flood |= empty & (flood << 8n) & CLAMP_64;
-  flood |= empty & (flood << 16n) & CLAMP_64;
-  flood |= empty & (flood << 32n) & CLAMP_64;
+  let prop = empty;
+
+  flood |= prop & (flood << 8n) & CLAMP_64;
+  prop &= (prop << 8n) & CLAMP_64;
+
+  flood |= prop & (flood << 16n) & CLAMP_64;
+  prop &= (prop << 16n) & CLAMP_64;
+
+  flood |= prop & (flood << 32n) & CLAMP_64;
   return (flood << 8n) & CLAMP_64;
 }
 
 function getSouthAttacks(pieces: bigint, empty: bigint): bigint {
   let flood = pieces;
-  flood |= empty & (flood >> 8n);
-  flood |= empty & (flood >> 16n);
-  flood |= empty & (flood >> 32n);
+  let prop = empty;
+
+  flood |= prop & (flood >> 8n);
+  prop &= prop >> 8n;
+
+  flood |= prop & (flood >> 16n);
+  prop &= prop >> 16n;
+
+  flood |= prop & (flood >> 32n);
+
   return flood >> 8n;
 }
 
 function getEastAttacks(pieces: bigint, empty: bigint): bigint {
   let flood = pieces;
-  const prop = empty & NOT_A_FILE; // Prevent wrapping to A-file
+  let prop = empty & NOT_A_FILE;
+
   flood |= prop & (flood << 1n) & CLAMP_64;
+  prop &= (prop << 1n) & CLAMP_64;
+
   flood |= prop & (flood << 2n) & CLAMP_64;
+  prop &= (prop << 2n) & CLAMP_64;
+
   flood |= prop & (flood << 4n) & CLAMP_64;
+
   return (flood << 1n) & NOT_A_FILE & CLAMP_64;
 }
 
 function getWestAttacks(pieces: bigint, empty: bigint): bigint {
   let flood = pieces;
-  const prop = empty & NOT_H_FILE; // Prevent wrapping to H-file
+  let prop = empty & NOT_H_FILE;
+
   flood |= prop & (flood >> 1n);
+  prop &= prop >> 1n;
+
   flood |= prop & (flood >> 2n);
+  prop &= prop >> 2n;
+
   flood |= prop & (flood >> 4n);
+
   return (flood >> 1n) & NOT_H_FILE;
 }
 
 function getNorthEastAttacks(pieces: bigint, empty: bigint): bigint {
   let flood = pieces;
-  const prop = empty & NOT_A_FILE;
+  let prop = empty & NOT_A_FILE;
+
   flood |= prop & (flood << 9n) & CLAMP_64;
+  prop &= (prop << 9n) & CLAMP_64;
+
   flood |= prop & (flood << 18n) & CLAMP_64;
+  prop &= (prop << 18n) & CLAMP_64;
+
   flood |= prop & (flood << 36n) & CLAMP_64;
+
   return (flood << 9n) & NOT_A_FILE & CLAMP_64;
 }
 
 function getNorthWestAttacks(pieces: bigint, empty: bigint): bigint {
   let flood = pieces;
-  const prop = empty & NOT_H_FILE;
+  let prop = empty & NOT_H_FILE;
+
   flood |= prop & (flood << 7n) & CLAMP_64;
+  prop &= (prop << 7n) & CLAMP_64;
+
   flood |= prop & (flood << 14n) & CLAMP_64;
+  prop &= (prop << 14n) & CLAMP_64;
+
   flood |= prop & (flood << 28n) & CLAMP_64;
+
   return (flood << 7n) & NOT_H_FILE & CLAMP_64;
 }
 
 function getSouthEastAttacks(pieces: bigint, empty: bigint): bigint {
   let flood = pieces;
-  const prop = empty & NOT_A_FILE;
+  let prop = empty & NOT_A_FILE;
+
   flood |= prop & (flood >> 7n);
+  prop &= prop >> 7n;
+
   flood |= prop & (flood >> 14n);
+  prop &= prop >> 14n;
+
   flood |= prop & (flood >> 28n);
+
   return (flood >> 7n) & NOT_A_FILE;
 }
 
 function getSouthWestAttacks(pieces: bigint, empty: bigint): bigint {
   let flood = pieces;
-  const prop = empty & NOT_H_FILE;
+  let prop = empty & NOT_H_FILE;
+
   flood |= prop & (flood >> 9n);
+  prop &= prop >> 9n;
+
   flood |= prop & (flood >> 18n);
+  prop &= prop >> 18n;
+
   flood |= prop & (flood >> 36n);
+
   return (flood >> 9n) & NOT_H_FILE;
 }
 
