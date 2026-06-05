@@ -1,25 +1,14 @@
-export type BoardState = {
-  whitePawns: bigint;
-  whiteKnights: bigint;
-  whiteBishops: bigint;
-  whiteRooks: bigint;
-  whiteQueens: bigint;
-  whiteKing: bigint;
-
-  blackPawns: bigint;
-  blackKnights: bigint;
-  blackBishops: bigint;
-  blackRooks: bigint;
-  blackQueens: bigint;
-  blackKing: bigint;
-
-  allWhitePieces: bigint;
-  allBlackPieces: bigint;
-  occupiedSquares: bigint;
-
-  whiteToMove: boolean;
-  castlingRights: number;
-  enPassantTarget: bigint;
-  halfMoveClock: number;
-  fullMoveNumber: number;
+// prettier-ignore
+export type BItboards = {
+  // White Pieces
+  P: bigint; N: bigint; B: bigint;
+  R: bigint; Q: bigint; K: bigint;
+  // Black pieces
+  p: bigint; n: bigint; b: bigint;
+  r: bigint; q: bigint; k: bigint;
 };
+
+export interface LegalMove {
+  from: string;
+  to: string;
+}

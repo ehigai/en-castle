@@ -1,8 +1,10 @@
+import type { BItboards } from "./types";
+
 /**
  * Parses the board portion of a FEN string into 12 piece bitboards.
  * Uses LERF mapping (A1 = index 0).
  */
-export function fenToBitboards(fen: string) {
+export function fenToBitboards(fen: string): BItboards {
   // Initialize 12 empty bitboards
   // prettier-ignore
   const boards = {
