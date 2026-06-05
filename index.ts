@@ -1,11 +1,15 @@
-import { validateFen } from "./fen";
-import { fenToBitboards, generateLegalMoves } from "./generator";
+import { validateFen } from "./core/fen";
+import {
+  bitboardsToFenBoard,
+  fenBoardToBitboards,
+  generateLegalMoves,
+} from "./core/generator";
 import {
   getBlackCastlingMoves,
   getBlackDangerZone,
   getWhiteCastlingMoves,
   getWhiteDangerZone,
-} from "./legal";
+} from "./core/legal";
 import {
   getBlackPawnMoves,
   getKnightMoves,
@@ -14,8 +18,9 @@ import {
   getBishopMoves,
   getQueenMoves,
   getKingMoves,
-} from "./moves";
-import { getEnPassantSquare } from "./utils";
+} from "./core/moves";
+import { makeMove } from "./core/state";
+import { getEnPassantSquare } from "./core/helpers";
 
 let currentFen = "";
 const fenPrompt = "Enter FEN (or Ctrl+C to exit):\n> ";
@@ -43,12 +48,12 @@ for await (const line of console) {
     } else {
       console.log(`\nValid FEN: ${currentFen}`);
       if (move) {
-        console.log(`Move to process: ${move}`);
+        // console.log(`Move to process: ${move}`);
       } else {
         console.log(`No move provided.`);
       }
 
-      const bitboards = fenToBitboards(currentFen);
+      const bitboards = fenBoardToBitboards(currentFen);
 
       const whitePieces =
         bitboards.P |
@@ -174,6 +179,28 @@ for await (const line of console) {
         `\n--- Strictly Legal Move List (${legalMoves.length} total) ---`,
       );
       console.log(legalMoves.join(", "));
+
+      if (move) {
+        console.log(`\n--- Executing Move: ${move} ---`);
+
+        // Ensure the move is legally allowed before making it
+        if (legalMoves.includes(move)) {
+          const nextFen = makeMove(currentFen, move);
+          console.log(`:: Move Successful!`);
+          console.log(`Next State (FEN): ${nextFen}`);
+        } else {
+          console.log(
+            `:: ILLEGAL MOVE! '${move}' was blocked by the Validator.`,
+          );
+        }
+      }
+
+      const originalBoardPart = currentFen.split(" ")[0];
+      const reconstructedBoard = bitboardsToFenBoard(bitboards);
+
+      console.log(`\n--- Re-Encoder Test ---`);
+      console.log(`Original FEN:      ${originalBoardPart}`);
+      console.log(`Reconstructed FEN: ${reconstructedBoard}`);
     }
 
     currentFen = "";

@@ -8,7 +8,7 @@ import {
   getQueenMoves,
   getKingMoves,
 } from "../moves";
-import { SquareBitboards, CLAMP_64 } from "../constants";
+import { SquareBitboards, CLAMP_64 } from "../core/constants";
 
 /**
  * Helper function to convert bitboard to array of square indices

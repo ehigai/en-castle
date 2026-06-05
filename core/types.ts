@@ -12,3 +12,8 @@ export interface LegalMove {
   from: string;
   to: string;
 }
+
+export interface MoveIndices {
+  fromIndex: number;
+  toIndex: number;
+}

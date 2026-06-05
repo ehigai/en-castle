@@ -23,13 +23,13 @@ import {
 } from "./moves";
 import { BETWEEN_RAYS } from "./rays";
 import type { BItboards } from "./types";
-import { getEnPassantSquare } from "./utils";
+import { getEnPassantSquare } from "./helpers";
 
 /**
  * Parses the board portion of a FEN string into 12 piece bitboards.
  * Uses LERF mapping (A1 = index 0).
  */
-export function fenToBitboards(fen: string): BItboards {
+export function fenBoardToBitboards(fen: string): BItboards {
   // Initialize 12 empty bitboards
   // prettier-ignore
   const boards = {
@@ -69,11 +69,64 @@ export function fenToBitboards(fen: string): BItboards {
 }
 
 /**
+ * Converts 12 piece bitboards back into the board portion of a FEN string.
+ */
+export function bitboardsToFenBoard(bitboards: BItboards): string {
+  let fen = "";
+
+  // FEN starts at Rank 8 (Top) and goes down to Rank 1
+  for (let rank = 7; rank >= 0; rank--) {
+    let emptyCount = 0;
+
+    // File A to H
+    for (let file = 0; file < 8; file++) {
+      const bitIndex = BigInt(rank * 8 + file);
+      const mask = 1n << bitIndex;
+      let foundPiece = "";
+
+      // Check which piece occupies this bit
+      if ((bitboards.P & mask) !== 0n) foundPiece = "P";
+      else if ((bitboards.N & mask) !== 0n) foundPiece = "N";
+      else if ((bitboards.B & mask) !== 0n) foundPiece = "B";
+      else if ((bitboards.R & mask) !== 0n) foundPiece = "R";
+      else if ((bitboards.Q & mask) !== 0n) foundPiece = "Q";
+      else if ((bitboards.K & mask) !== 0n) foundPiece = "K";
+      else if ((bitboards.p & mask) !== 0n) foundPiece = "p";
+      else if ((bitboards.n & mask) !== 0n) foundPiece = "n";
+      else if ((bitboards.b & mask) !== 0n) foundPiece = "b";
+      else if ((bitboards.r & mask) !== 0n) foundPiece = "r";
+      else if ((bitboards.q & mask) !== 0n) foundPiece = "q";
+      else if ((bitboards.k & mask) !== 0n) foundPiece = "k";
+
+      if (foundPiece) {
+        if (emptyCount > 0) {
+          fen += emptyCount.toString();
+          emptyCount = 0;
+        }
+        fen += foundPiece;
+      } else {
+        emptyCount++;
+      }
+    }
+
+    if (emptyCount > 0) {
+      fen += emptyCount.toString();
+    }
+
+    if (rank > 0) {
+      fen += "/";
+    }
+  }
+
+  return fen;
+}
+
+/**
  * Master Orchestrator.
  * Parses a FEN and returns an array of all strictly legal moves in UCI format (e.g., "e2e4").
  */
 export function generateLegalMoves(fen: string): string[] {
-  const bitboards = fenToBitboards(fen);
+  const bitboards = fenBoardToBitboards(fen);
   const epSquare = getEnPassantSquare(fen);
 
   // Parse FEN metadata
