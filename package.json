@@ -1,15 +1,8 @@
 {
   "name": "en-castle",
-  "module": "index.ts",
-  "type": "module",
-  "scripts": {
-    "compile": "bun build --compile --outfile=compiled ./index.ts",
-    "test": "bun test"
-  },
-  "devDependencies": {
-    "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5"
-  }
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
 }

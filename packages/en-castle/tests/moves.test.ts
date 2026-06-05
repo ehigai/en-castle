@@ -8,7 +8,10 @@ import {
   getQueenMoves,
   getKingMoves,
 } from "../moves";
-import { SquareBitboards, CLAMP_64 } from "../core/constants";
+import {
+  SquareBitboards,
+  CLAMP_64,
+} from "../packages/en-castle/core/constants";
 
 /**
  * Helper function to convert bitboard to array of square indices

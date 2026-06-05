@@ -1,15 +1,15 @@
-import { validateFen } from "./core/fen";
+import { validateFen } from "./packages/en-castle/core/fen";
 import {
   bitboardsToFenBoard,
   fenBoardToBitboards,
   generateLegalMoves,
-} from "./core/generator";
+} from "./packages/en-castle/core/generator";
 import {
   getBlackCastlingMoves,
   getBlackDangerZone,
   getWhiteCastlingMoves,
   getWhiteDangerZone,
-} from "./core/legal";
+} from "./packages/en-castle/core/legal";
 import {
   getBlackPawnMoves,
   getKnightMoves,
@@ -18,9 +18,9 @@ import {
   getBishopMoves,
   getQueenMoves,
   getKingMoves,
-} from "./core/moves";
-import { makeMove } from "./core/state";
-import { getEnPassantSquare } from "./core/helpers";
+} from "./packages/en-castle/core/moves";
+import { makeMove } from "./packages/en-castle/core/state";
+import { getEnPassantSquare } from "./packages/en-castle/core/helpers";
 
 let currentFen = "";
 const fenPrompt = "Enter FEN (or Ctrl+C to exit):\n> ";
