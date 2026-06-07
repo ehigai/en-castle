@@ -1,5 +1,5 @@
-import { treaty } from "@elysia/eden"
-import type { App } from "@server/index"
-import { env } from "./env"
+// import { treaty } from "@elysia/eden"
+// import type { App } from "@server/index"
+// import { env } from "./env"
 
-export const api = treaty<App>(env("VITE_API_URL"))
+// export const api = treaty<App>(env("VITE_API_URL"))
