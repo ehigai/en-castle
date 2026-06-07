@@ -1,5 +1,7 @@
 {
   "name": "en-castle",
+  "version": "1.0.0",
+  "description": "A blazingly fast, 100% stateless, mathematically pure bitboard chess engine core written in TypeScript.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
