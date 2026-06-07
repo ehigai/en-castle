@@ -98,7 +98,7 @@ export function makeMove(fen: string, move: string): string {
 
   // :: Metadata Updates
   // Update en-passant target - only if a pawn moves two squares
-  epTarget = " - ";
+  epTarget = "-";
   if (isPawn && Math.abs(toIndex - fromIndex) === 16) {
     const epIndex = activeColor === "w" ? fromIndex + 8 : fromIndex - 8;
     epTarget = indexToSquare(epIndex);
