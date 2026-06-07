@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react"
 import { api } from "@/lib/eden"
+import Board from "@/components/board"
+import { PieceSelector } from "./components/theme/piece-selector"
 
 export function App() {
   const [data, setData] = useState<string | null>("")
@@ -16,10 +18,13 @@ export function App() {
   }, [])
 
   return (
-    <div className="min-h-svh p-6">
-      <p>Root data: {rootData}</p>
-      <p>Data: {data}</p>
-    </div>
+    <main className="flex h-screen w-full items-center justify-center">
+      <Board />
+
+      <div>
+        <PieceSelector />
+      </div>
+    </main>
   )
 }
 

@@ -1,4 +1,5 @@
 import { treaty } from "@elysia/eden"
 import type { App } from "@server/index"
+import { env } from "./env"
 
-export const api = treaty<App>("http://localhost:3000")
+export const api = treaty<App>(env("VITE_API_URL"))
