@@ -1,13 +1,19 @@
 import Board from "@/components/board"
-import { PieceSelector } from "./components/theme/piece-selector"
+import { MoveHistory } from "./components/move-history"
+import Preferences from "./components/preferences"
 
 export function App() {
   return (
-    <main className="flex h-screen w-full items-center justify-center">
-      <Board />
+    <main className="flex h-screen w-full items-center justify-center gap-8 p-8">
+      <div className="flex h-full w-1/5 flex-col gap-4">
+        <MoveHistory />
+      </div>
+      <div className="flex h-full flex-col gap-4">
+        <Board />
+      </div>
 
-      <div>
-        <PieceSelector />
+      <div className="flex h-full w-1/5 flex-col gap-4">
+        <Preferences />
       </div>
     </main>
   )

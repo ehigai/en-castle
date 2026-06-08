@@ -6,7 +6,7 @@ import {
   makeMove as engineMakeMove,
   validateFen,
 } from "en-castle"
-import { STARTING_FEN } from "@/constants"
+import { useChessStore } from "@/store/chess.store"
 
 export interface PendingPromotion {
   from: string
@@ -14,8 +14,8 @@ export interface PendingPromotion {
   color: "w" | "b"
 }
 
-export function useChess(initialFen: string = STARTING_FEN) {
-  const [fen, setFen] = useState(initialFen)
+export function useChess() {
+  const { fen, setFen, addMove, resetGame, history } = useChessStore()
   const [error, setError] = useState<string | undefined>(undefined)
   const [selectedSquare, setSelectedSquare] = useState<string | null>(null)
   const [pendingPromotion, setPendingPromotion] = useState<PendingPromotion | null>(null)
@@ -77,6 +77,7 @@ export function useChess(initialFen: string = STARTING_FEN) {
       if (legalMoves && legalMoves.includes(uci)) {
         const nextFen = engineMakeMove(fen, uci)
         setFen(nextFen)
+        addMove(uci)
         setError(undefined)
       } else {
         setError("Illegal move")
@@ -95,6 +96,7 @@ export function useChess(initialFen: string = STARTING_FEN) {
       if (legalMoves && legalMoves.includes(uci)) {
         const nextFen = engineMakeMove(fen, uci)
         setFen(nextFen)
+        addMove(uci)
         setError(undefined)
       } else {
         setError("Illegal promotion move")
@@ -150,7 +152,7 @@ export function useChess(initialFen: string = STARTING_FEN) {
   }
 
   const reset = () => {
-    setFen(initialFen)
+    resetGame()
     setError(undefined)
     setSelectedSquare(null)
     setPendingPromotion(null)
@@ -158,6 +160,7 @@ export function useChess(initialFen: string = STARTING_FEN) {
 
   return {
     fen,
+    history,
     board,
     error,
     selectedSquare,
