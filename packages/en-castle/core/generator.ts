@@ -274,9 +274,17 @@ export function generateLegalMoves(fen: string): string[] {
 
     const destIndices = getBitIndices(moves);
     const fromName = SQUARES[srcSq]!;
+    const isPawn = (srcBit & (bitboards.P | bitboards.p)) !== 0n;
     for (const destSq of destIndices) {
       const toName = SQUARES[destSq]!;
-      legalMovesList.push(`${fromName}${toName}`);
+      if (isPawn && (destSq >= 56 || destSq < 8)) {
+        legalMovesList.push(`${fromName}${toName}q`);
+        legalMovesList.push(`${fromName}${toName}r`);
+        legalMovesList.push(`${fromName}${toName}b`);
+        legalMovesList.push(`${fromName}${toName}n`);
+      } else {
+        legalMovesList.push(`${fromName}${toName}`);
+      }
     }
   }
 

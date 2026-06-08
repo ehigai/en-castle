@@ -164,7 +164,7 @@ export function getWhitePawnMoves(
   whitePawns: bigint,
   emptySquares: bigint,
   blackPieces: bigint,
-  epSquare: bigint,
+  epSquare: bigint = 0n,
 ): bigint {
   const singlePushes = (whitePawns << 8n) & CLAMP_64 & emptySquares;
   const doublePushes = (singlePushes << 8n) & CLAMP_64 & emptySquares & RANK_4;
@@ -184,7 +184,7 @@ export function getBlackPawnMoves(
   blackPawns: bigint,
   emptySquares: bigint,
   whitePieces: bigint,
-  epSquare: bigint,
+  epSquare: bigint = 0n,
 ): bigint {
   const singlePushes = (blackPawns >> 8n) & emptySquares;
   const doublePushes = (singlePushes >> 8n) & emptySquares & RANK_5;

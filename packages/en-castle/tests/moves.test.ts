@@ -7,11 +7,11 @@ import {
   getBishopMoves,
   getQueenMoves,
   getKingMoves,
-} from "../moves";
+} from "../core/moves";
 import {
   SquareBitboards,
   CLAMP_64,
-} from "../packages/en-castle/core/constants";
+} from "../core/constants";
 
 /**
  * Helper function to convert bitboard to array of square indices
