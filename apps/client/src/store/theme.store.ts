@@ -1,6 +1,6 @@
 import { create } from "zustand"
 
-export type PieceTheme = "classic" | "neon" | "retro" | "3d"
+export type PieceTheme = "alpha" | "cburnett"
 
 interface ThemeState {
   pieceTheme: PieceTheme
@@ -8,6 +8,6 @@ interface ThemeState {
 }
 
 export const useThemeStore = create<ThemeState>((set) => ({
-  pieceTheme: "classic",
+  pieceTheme: "alpha",
   setPieceTheme: (theme) => set({ pieceTheme: theme }),
 }))

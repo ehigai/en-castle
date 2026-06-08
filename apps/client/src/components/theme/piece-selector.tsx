@@ -23,7 +23,8 @@ export function PieceSelector() {
       <SelectContent>
         <SelectGroup>
           <SelectLabel>Piece Theme</SelectLabel>
-          <SelectItem value="classic">Classic</SelectItem>
+          <SelectItem value="alpha">Alpha</SelectItem>
+          <SelectItem value="cburnett">Cburnett</SelectItem>
         </SelectGroup>
       </SelectContent>
     </Select>
