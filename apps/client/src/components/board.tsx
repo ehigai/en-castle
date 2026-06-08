@@ -8,7 +8,6 @@ export default function Board() {
   const {
     board,
     fen,
-    error,
     selectedSquare,
     highlightedSquares,
     pendingPromotion,
@@ -30,7 +29,6 @@ export default function Board() {
 
   return (
     <div className="flex flex-col items-center gap-4">
-      {error && <div className="text-sm font-semibold text-destructive">{error}</div>}
       <DndContext
         sensors={sensors}
         onDragStart={handleDragStart}
@@ -46,18 +44,18 @@ export default function Board() {
               onClick={() => selectSquare(square.notation)}
             />
           ))}
-          <PromotionDialog
-            pendingPromotion={pendingPromotion}
-            onSelect={completePromotion}
-            onClose={cancelPromotion}
-          />
         </div>
       </DndContext>
-      <div className="flex w-full max-w-lg items-center justify-between gap-4 mt-2">
+      <PromotionDialog
+        pendingPromotion={pendingPromotion}
+        onSelect={completePromotion}
+        onClose={cancelPromotion}
+      />
+      <div className="mt-2 flex w-full items-center justify-center gap-4">
         <Fen fen={fen} />
         <button
           onClick={reset}
-          className="flex items-center gap-1.5 px-4 py-2 text-sm font-semibold rounded-md border border-border bg-secondary hover:bg-muted text-foreground cursor-pointer transition-all active:scale-95 shadow-xs"
+          className="flex cursor-pointer items-center gap-1.5 rounded-md border border-border bg-secondary px-4 py-2 text-sm font-semibold whitespace-nowrap text-foreground shadow-xs transition-all hover:bg-muted active:scale-95"
         >
           Reset Game
         </button>
@@ -65,4 +63,3 @@ export default function Board() {
     </div>
   )
 }
-

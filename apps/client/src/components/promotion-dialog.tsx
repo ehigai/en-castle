@@ -25,7 +25,7 @@ export function PromotionDialog({
   ] as const
 
   return (
-    <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs rounded-sm animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs rounded-sm animate-in fade-in duration-200">
       <div className="w-80 bg-card p-5 rounded-lg shadow-lg border border-border text-center flex flex-col gap-4 animate-in zoom-in-95 duration-200">
         <h3 className="font-semibold text-foreground text-md">Pawn Promotion</h3>
         <div className="grid grid-cols-4 gap-2">
