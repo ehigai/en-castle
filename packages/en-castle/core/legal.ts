@@ -99,7 +99,7 @@ export function getBlackCastlingMoves(
   if (castlingRights.includes("k")) {
     if ((occupied & BLACK_K_EMPTY) === 0n) {
       if ((whiteDangerZone & BLACK_K_SAFE) === 0n) {
-        castlingMoves |= 0x40n;
+        castlingMoves |= 0x4000000000000000n;
       }
     }
   }
@@ -108,7 +108,7 @@ export function getBlackCastlingMoves(
   if (castlingRights.includes("q")) {
     if ((occupied & BLACK_Q_EMPTY) === 0n) {
       if ((whiteDangerZone & BLACK_Q_SAFE) === 0n) {
-        castlingMoves |= 0x04n;
+        castlingMoves |= 0x0400000000000000n;
       }
     }
   }
