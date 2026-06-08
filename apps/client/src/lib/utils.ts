@@ -7,30 +7,39 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function createBoard(): FixedLengthArray<Square, 64> {
-  const bd: Square[] = []
+export function fenToBoard(fen: string): FixedLengthArray<Square, 64> {
+  const board: Square[] = []
   const files = ["a", "b", "c", "d", "e", "f", "g", "h"]
-  for (let rank = 8; rank >= 1; rank--) {
-    for (let file = 0; file < 8; file++) {
-      const squareId = files[file]! + rank
-      let piece: IPiece | null = null
+  const parts = fen.split(" ")
+  const boardPart = parts[0] || ""
+  const rows = boardPart.split("/")
 
-      if (rank === 2) {
-        piece = "wP"
-      } else if (rank === 7) {
-        piece = "bP"
-      } else if (rank === 1 || rank === 8) {
-        const isWhite = rank === 1
-        const prefix = isWhite ? "w" : "b"
-        const backRank = ["R", "N", "B", "Q", "K", "B", "N", "R"] as const
-        piece = `${prefix}${backRank[file]!}` as IPiece
+  for (let r = 0; r < 8; r++) {
+    const rank = 8 - r
+    const row = rows[r] || ""
+    let fileIndex = 0
+    for (let i = 0; i < row.length; i++) {
+      const char = row[i]!
+      if (/\d/.test(char)) {
+        const numEmpty = parseInt(char, 10)
+        for (let e = 0; e < numEmpty; e++) {
+          board.push({
+            notation: files[fileIndex]! + rank,
+            piece: null,
+          })
+          fileIndex++
+        }
+      } else {
+        const isWhite = char === char.toUpperCase()
+        const pieceType = char.toUpperCase()
+        const piece = `${isWhite ? "w" : "b"}${pieceType}` as IPiece
+        board.push({
+          notation: files[fileIndex]! + rank,
+          piece,
+        })
+        fileIndex++
       }
-
-      bd.push({
-        notation: squareId,
-        piece,
-      })
     }
   }
-  return bd as unknown as FixedLengthArray<Square, 64>
+  return board as unknown as FixedLengthArray<Square, 64>
 }

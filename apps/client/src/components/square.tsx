@@ -12,10 +12,12 @@ function DraggablePiece({
   id,
   piece,
   pieceTheme,
+  onClick,
 }: {
   id: string
   piece: IPiece
   pieceTheme: string
+  onClick?: () => void
 }) {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id,
@@ -37,12 +39,23 @@ function DraggablePiece({
       {...attributes}
       src={`/pieces/${pieceTheme}/${piece}.svg`}
       alt={piece}
+      onClick={onClick}
       className="h-full w-full object-contain cursor-grab active:cursor-grabbing touch-none"
     />
   )
 }
 
-export default function Square({ square }: { square: Square }) {
+export default function Square({
+  square,
+  isSelected,
+  isHighlighted,
+  onClick,
+}: {
+  square: Square
+  isSelected?: boolean
+  isHighlighted?: boolean
+  onClick?: () => void
+}) {
   const pieceTheme = useThemeStore((state) => state.pieceTheme)
   const file = square.notation.charCodeAt(0) - 97
   const rank = parseInt(square.notation[1] as string, 10) - 1
@@ -55,9 +68,11 @@ export default function Square({ square }: { square: Square }) {
   return (
     <div
       ref={setNodeRef}
+      onClick={onClick}
       className={cn(
-        isLightSquare ? "bg-gray-50" : "bg-green-700",
-        "flex aspect-square w-26! items-center justify-center border"
+        isLightSquare ? "bg-board-light" : "bg-board-dark",
+        "relative flex aspect-square w-26! items-center justify-center border cursor-pointer select-none",
+        isSelected && "after:absolute after:inset-0 after:bg-board-selected after:pointer-events-none"
       )}
     >
       {square.piece && (
@@ -65,9 +80,21 @@ export default function Square({ square }: { square: Square }) {
           id={square.notation}
           piece={square.piece}
           pieceTheme={pieceTheme}
+          onClick={onClick}
+        />
+      )}
+      {isHighlighted && (
+        <div
+          className={cn(
+            "absolute pointer-events-none rounded-full",
+            square.piece
+              ? "inset-1 border-4 border-board-highlight"
+              : "h-6 w-6 bg-board-highlight"
+          )}
         />
       )}
     </div>
   )
 }
+
 
