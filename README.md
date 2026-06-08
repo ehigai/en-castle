@@ -95,3 +95,6 @@ Built with ⚡ by [ehigai](https://github.com/ehigai)
 ## 📄 License
 
 MIT License. See LICENSE for details.
+
+## Acknowledgements
+Encastle uses open-source vector graphics for its chess pieces. Please see the [ATTRIBUTION.md](./ATTRIBUTION.md) file for full details, creators, and license requirements.
