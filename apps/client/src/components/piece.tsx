@@ -16,7 +16,7 @@ export function DraggablePiece({ id, piece, pieceTheme, onClick }: PieceProps) {
   const flipped = useThemeStore((state) => state.flipped)
 
   const file = id.charCodeAt(0) - 97
-  const rank = parseInt(id[1], 10) - 1
+  const rank = parseInt(id[1]!, 10) - 1
 
   const displayFile = flipped ? 7 - file : file
   const displayRank = flipped ? rank : 7 - rank
