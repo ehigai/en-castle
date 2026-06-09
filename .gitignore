@@ -10,6 +10,8 @@ compiled
 # code coverage
 coverage
 *.lcov
+.agents
+.codex
 
 # logs
 logs
