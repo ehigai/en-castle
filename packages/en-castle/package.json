@@ -1,7 +1,29 @@
 {
- "name": "en-castle",
-  "version": "1.0.0-beta.1",
+  "name": "en-castle",
+  "version": "1.0.0-beta.2",
   "description": "A blazingly fast, 100% stateless, mathematically pure bitboard chess engine core written in TypeScript.",
+  "author": "Ehigai Salvation <ehigaisalvation@gmail.com>",
+  "license": "MIT",
+  "keywords": [
+    "chess",
+    "engine",
+    "bitboard",
+    "stateless",
+    "fen",
+    "typescript",
+    "move-generation"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ehigai/en-castle.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ehigai/en-castle/issues"
+  },
+  "homepage": "https://github.com/ehigai/en-castle#readme",
+  "files": [
+    "dist"
+  ],
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
