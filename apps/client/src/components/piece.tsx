@@ -1,5 +1,6 @@
 import { useDraggable } from "@dnd-kit/core"
 import type { IPiece } from "@/types"
+import { useThemeStore } from "@/store/theme.store"
 
 export interface PieceProps {
   id: string
@@ -9,16 +10,19 @@ export interface PieceProps {
 }
 
 export function DraggablePiece({ id, piece, pieceTheme, onClick }: PieceProps) {
-  const { attributes, listeners, setNodeRef, transform, isDragging } =
-    useDraggable({
-      id,
-    })
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
+    id,
+  })
+  const flipped = useThemeStore((state) => state.flipped)
 
   const file = id.charCodeAt(0) - 97
-  const rank = parseInt(id[1]!, 10) - 1
+  const rank = parseInt(id[1], 10) - 1
 
-  const left = `${file * 12.5}%`
-  const top = `${(7 - rank) * 12.5}%`
+  const displayFile = flipped ? 7 - file : file
+  const displayRank = flipped ? rank : 7 - rank
+
+  const left = `${displayFile * 12.5}%`
+  const top = `${displayRank * 12.5}%`
 
   const style = {
     position: "absolute" as const,

@@ -5,12 +5,14 @@ export default function Square({
   notation,
   isSelected,
   isHighlighted,
+  isLastMove,
   hasPiece,
   onClick,
 }: {
   notation: string
   isSelected?: boolean
   isHighlighted?: boolean
+  isLastMove?: boolean
   hasPiece?: boolean
   onClick?: () => void
 }) {
@@ -24,7 +26,8 @@ export default function Square({
       onClick={onClick}
       className={cn(
         "relative flex aspect-square w-full items-center justify-center cursor-pointer select-none",
-        isSelected && "after:absolute after:inset-0 after:bg-board-selected/50 after:pointer-events-none"
+        isSelected && "after:absolute after:inset-0 after:bg-board-selected/50 after:pointer-events-none",
+        isLastMove && "before:absolute before:inset-0 before:bg-yellow-500/30 before:pointer-events-none"
       )}
     >
       {isHighlighted && (

@@ -158,9 +158,15 @@ export function useChess() {
     setPendingPromotion(null)
   }
 
+  const lastMove = useMemo(() => {
+    if (history.length === 0) return null
+    return history[history.length - 1]
+  }, [history])
+
   return {
     fen,
     history,
+    lastMove,
     board,
     error,
     selectedSquare,

@@ -1,7 +1,10 @@
 import { useChessStore } from "@/store/chess.store"
+import { Button } from "./ui/button"
+import { useChess } from "@/hooks/use-chess"
 
 export function MoveHistory() {
   const history = useChessStore((state) => state.history)
+  const { reset } = useChess()
 
   const pairs = []
   for (let i = 0; i < history.length; i += 2) {
@@ -12,7 +15,7 @@ export function MoveHistory() {
   }
 
   return (
-    <div className="flex h-full w-full flex-col rounded-lg border border-border bg-card p-4 shadow-sm">
+    <div className="flex h-1/2 w-full flex-col border border-border bg-card p-4">
       <h2 className="mb-4 text-lg font-semibold text-card-foreground">
         Move History
       </h2>
@@ -40,6 +43,7 @@ export function MoveHistory() {
           )}
         </div>
       </div>
+      <Button onClick={reset}>Reset Game</Button>
     </div>
   )
 }
