@@ -1,7 +1,6 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
-import type { FixedLengthArray, IPiece } from "@/types"
-import type { Square } from "@/components/square"
+import type { FixedLengthArray, IPiece, Square } from "@/types"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))

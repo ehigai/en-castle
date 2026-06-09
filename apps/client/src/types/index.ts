@@ -1,5 +1,3 @@
-import type { Square } from "@/components/square"
-
 // prettier-ignore
 type FixedLengthArray<Type, Length extends number, Acc extends readonly Type[] = []> = 
   Acc['length'] extends Length 
@@ -9,6 +7,11 @@ type FixedLengthArray<Type, Length extends number, Acc extends readonly Type[] =
 // prettier-ignore
 export type IPiece = "wP" | "wN" | "wB" | "wR" | "wQ" | "wK" |
                      "bP" | "bN" | "bB" | "bR" | "bQ" | "bK"
+
+export interface Square {
+  notation: string
+  piece: IPiece | null
+}
 
 type Board = FixedLengthArray<Square, 64>
 
