@@ -57,12 +57,10 @@ export default function Board() {
     <div className="flex flex-col items-center gap-4">
       <div className="flex w-150 items-center justify-between px-2">
         <div className="flex items-center gap-3">
-          <div
-            className={cn(
-              "flex h-8 w-8 items-center justify-center border border-border/50 text-xs font-bold uppercase",
-              topColor === "w" ? "bg-white text-black" : "bg-black text-white"
-            )}
-          >
+          <div className={cn(
+            "h-8 w-8 rounded flex items-center justify-center font-bold uppercase text-xs border border-border/50 shadow-sm",
+            topColor === "w" ? "bg-white text-black" : "bg-black text-white"
+          )}>
             {topColor}
           </div>
           <CapturedPieces board={board} color={topColor} />
@@ -110,14 +108,10 @@ export default function Board() {
 
       <div className="flex w-150 items-center justify-between px-2">
         <div className="flex items-center gap-3">
-          <div
-            className={cn(
-              "flex h-8 w-8 items-center justify-center border border-border/50 text-xs font-bold uppercase",
-              bottomColor === "w"
-                ? "bg-white text-black"
-                : "bg-black text-white"
-            )}
-          >
+          <div className={cn(
+            "h-8 w-8 rounded flex items-center justify-center font-bold uppercase text-xs border border-border/50 shadow-sm",
+            bottomColor === "w" ? "bg-white text-black" : "bg-black text-white"
+          )}>
             {bottomColor}
           </div>
           <CapturedPieces board={board} color={bottomColor} />

@@ -15,34 +15,61 @@ export interface PendingPromotion {
 }
 
 export function useChess() {
-  const { fen, setFen, addMove, resetGame, history } = useChessStore()
+  const {
+    initialFen,
+    fen,
+    makeMove,
+    resetGame,
+    history,
+    viewIndex,
+    setViewIndex,
+  } = useChessStore()
   const [error, setError] = useState<string | undefined>(undefined)
   const [selectedSquare, setSelectedSquare] = useState<string | null>(null)
-  const [pendingPromotion, setPendingPromotion] = useState<PendingPromotion | null>(null)
+  const [pendingPromotion, setPendingPromotion] =
+    useState<PendingPromotion | null>(null)
 
-  const board = useMemo(() => fenToBoard(fen), [fen])
+  const displayFen = useMemo(() => {
+    if (viewIndex === history.length) return fen
+    let current = initialFen
+    for (const move of history.slice(0, viewIndex)) {
+      try {
+        current = engineMakeMove(current, move)
+      } catch (e) {
+        console.error("Failed to replay move", move, e)
+        break
+      }
+    }
+    return current
+  }, [initialFen, fen, history, viewIndex])
+
+  const board = useMemo(() => fenToBoard(displayFen), [displayFen])
 
   const turn = useMemo(() => {
-    const parts = fen.split(" ")
+    const parts = displayFen.split(" ")
     return parts[1] || "w"
-  }, [fen])
+  }, [displayFen])
+
+  const isLive = viewIndex === history.length
 
   const legalMoves = useMemo(() => {
+    if (!isLive) return []
     try {
-      return generateLegalMoves(fen) || []
+      return generateLegalMoves(displayFen) || []
     } catch {
       return []
     }
-  }, [fen])
+  }, [displayFen, isLive])
 
   const highlightedSquares = useMemo(() => {
-    if (!selectedSquare) return []
+    if (!selectedSquare || !isLive) return []
     return legalMoves
       .filter((move) => move.startsWith(selectedSquare))
       .map((move) => move.slice(2, 4))
-  }, [selectedSquare, legalMoves])
+  }, [selectedSquare, legalMoves, isLive])
 
   const movePiece = (fromSquare: string, toSquare: string) => {
+    if (!isLive) return
     if (fromSquare === toSquare) return
 
     const fromSq = board.find((s) => s.notation === fromSquare)
@@ -67,7 +94,7 @@ export function useChess() {
 
     const uci = `${fromSquare}${toSquare}`
 
-    const response = validateFen(fen)
+    const response = validateFen(displayFen)
     if (!response.isValid) {
       setError(response.error || "Invalid FEN")
       return
@@ -75,9 +102,8 @@ export function useChess() {
 
     try {
       if (legalMoves && legalMoves.includes(uci)) {
-        const nextFen = engineMakeMove(fen, uci)
-        setFen(nextFen)
-        addMove(uci)
+        const nextFen = engineMakeMove(displayFen, uci)
+        makeMove(uci, nextFen)
         setError(undefined)
       } else {
         setError("Illegal move")
@@ -88,15 +114,14 @@ export function useChess() {
   }
 
   const completePromotion = (promotionChar: "q" | "r" | "b" | "n") => {
-    if (!pendingPromotion) return
+    if (!pendingPromotion || !isLive) return
     const { from, to } = pendingPromotion
     const uci = `${from}${to}${promotionChar}`
 
     try {
       if (legalMoves && legalMoves.includes(uci)) {
-        const nextFen = engineMakeMove(fen, uci)
-        setFen(nextFen)
-        addMove(uci)
+        const nextFen = engineMakeMove(displayFen, uci)
+        makeMove(uci, nextFen)
         setError(undefined)
       } else {
         setError("Illegal promotion move")
@@ -113,6 +138,7 @@ export function useChess() {
   }
 
   const handleDragStart = (event: DragStartEvent) => {
+    if (!isLive) return
     const fromSquare = event.active.id as string
     const sq = board.find((s) => s.notation === fromSquare)
     if (sq && sq.piece && sq.piece.startsWith(turn)) {
@@ -121,6 +147,7 @@ export function useChess() {
   }
 
   const handleDragEnd = (event: DragEndEvent) => {
+    if (!isLive) return
     const { active, over } = event
     setSelectedSquare(null)
     if (!over) return
@@ -132,6 +159,7 @@ export function useChess() {
   }
 
   const selectSquare = (notation: string) => {
+    if (!isLive) return
     const sq = board.find((s) => s.notation === notation)
     if (!selectedSquare) {
       if (sq && sq.piece && sq.piece.startsWith(turn)) {
@@ -159,13 +187,16 @@ export function useChess() {
   }
 
   const lastMove = useMemo(() => {
-    if (history.length === 0) return null
-    return history[history.length - 1]
-  }, [history])
+    if (viewIndex === 0) return null
+    return history[viewIndex - 1]
+  }, [history, viewIndex])
 
   return {
-    fen,
+    fen: displayFen,
     history,
+    viewIndex,
+    isLive,
+    setViewIndex,
     lastMove,
     board,
     error,
