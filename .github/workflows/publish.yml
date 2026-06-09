@@ -24,8 +24,7 @@ jobs:
         run: bun run build
 
       - name: Authenticate with npm
-        working-directory: ./packages/en-castle
-        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > .npmrc
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
 
       - name: Publish to npm
         working-directory: ./packages/en-castle
