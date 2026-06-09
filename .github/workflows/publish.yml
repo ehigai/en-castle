@@ -1,0 +1,32 @@
+name: Publish en-castle to npm
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install Dependencies
+        run: bun install
+
+      - name: Build the Library
+        working-directory: ./packages/en-castle
+        run: bun run build
+
+      - name: Authenticate with npm
+        working-directory: ./packages/en-castle
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > .npmrc
+
+      - name: Publish to npm
+        working-directory: ./packages/en-castle
+        run: npm publish --access public
